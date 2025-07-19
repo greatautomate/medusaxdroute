@@ -4,7 +4,7 @@ services:
     name: medusaxd-api
     env: docker
     dockerfilePath: ./Dockerfile
-    plan: starter
+    plan: standard
     region: oregon
     branch: main
     healthCheckPath: /api/status
