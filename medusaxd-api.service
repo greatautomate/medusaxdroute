@@ -1,0 +1,18 @@
+# File path: /etc/systemd/system/medusaxd-api.service
+# sudo systemctl daemon-reload
+# sudo systemctl start medusaxd-api
+# sudo systemctl enable medusaxd-api
+# sudo systemctl status medusaxd-api
+[Unit]
+Description=MedusaXD API Service
+After=network.target
+
+[Service]
+User=ubuntu  # Note: modify username
+WorkingDirectory=/path/to/medusaxd-api  # Note: modify path
+ExecStart=/path/to/medusaxd-api/medusaxd-api --port 3000 --log-dir /path/to/medusaxd-api/logs  # Note: modify path and port number
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

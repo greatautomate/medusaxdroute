@@ -1,0 +1,14 @@
+.idea
+.vscode
+upload
+*.exe
+*.db
+build
+*.db-journal
+logs
+web/dist
+.env
+medusaxd-api
+medusaxd-api-*
+.DS_Store
+tiktoken_cache

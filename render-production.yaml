@@ -1,0 +1,76 @@
+# Production-Ready Render.com Configuration for MedusaXD API
+# This configuration uses paid tiers for production workloads
+# Total estimated cost: ~$80/month
+
+services:
+  # Web Service - Standard Plan
+  - type: web
+    name: medusaxd-api
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: standard  # $25/month - 2GB RAM, 1 CPU, no sleep
+    region: oregon
+    branch: main
+    healthCheckPath: /api/status
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: medusaxd-postgres
+          property: connectionString
+      - key: REDIS_CONN_STRING
+        fromService:
+          type: redis
+          name: medusaxd-redis
+          property: connectionString
+      - key: TZ
+        value: UTC
+      - key: ERROR_LOG_ENABLED
+        value: "true"
+      - key: STREAMING_TIMEOUT
+        value: "120"
+      - key: FORCE_STREAM_OPTION
+        value: "true"
+      - key: GET_MEDIA_TOKEN
+        value: "true"
+      - key: GET_MEDIA_TOKEN_NOT_STREAM
+        value: "true"
+      - key: UPDATE_TASK
+        value: "true"
+      - key: COHERE_SAFETY_SETTING
+        value: "NONE"
+      - key: GEMINI_VISION_MAX_IMAGE_NUM
+        value: "16"
+      - key: MAX_FILE_DOWNLOAD_MB
+        value: "20"
+      - key: AZURE_DEFAULT_API_VERSION
+        value: "2025-04-01-preview"
+      - key: NOTIFICATION_LIMIT_DURATION_MINUTE
+        value: "10"
+      - key: NOTIFY_LIMIT_COUNT
+        value: "2"
+      - key: GENERATE_DEFAULT_TOKEN
+        value: "false"
+      - key: DIFY_DEBUG
+        value: "true"
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: CRYPTO_SECRET
+        generateValue: true
+      - key: SERVER_ADDRESS
+        value: https://medusaxd-api.onrender.com  # Change this to your custom domain if you have one
+
+databases:
+  # PostgreSQL Database - Pro Tier
+  - name: medusaxd-postgres
+    databaseName: medusaxd_api
+    user: medusaxd_user
+    plan: pro-4gb  # $55/month - 1 CPU, 4GB RAM, high availability, point-in-time recovery
+    region: oregon
+    postgresMajorVersion: "15"
+    # Additional storage billed at $0.30/GB/month as needed
+
+  # Redis Cache - Standard Plan
+  - name: medusaxd-redis
+    plan: standard  # $32/month - 1GB RAM, 1,000 connections, persistent storage
+    region: oregon
+    maxmemoryPolicy: allkeys-lru
